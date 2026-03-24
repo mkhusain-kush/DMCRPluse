@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DM Clinical Intranet</title>
+  <style>
+    :root {
+      --sidebar: #16304f;
+      --primary: #0d6ea8;
+      --primary-dark: #0a5785;
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dbe3ee;
+      --hover: #eef6fd;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--sidebar);
+      color: white;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 100vh;
+    }
+
+    .logo {
+      text-align: center;
+      padding: 12px 8px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 6px;
+    }
+
+    .logo-mark {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #dbe7f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 68px;
+      border-radius: 12px;
+      padding: 10px 6px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .nav a.active,
+    .nav a:hover {
+      background: #0f5f97;
+      color: white;
+    }
+
+    .icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .main {
+      padding: 18px 22px 28px;
+      min-width: 0;
+    }
+
+    .topbar {
+      margin-bottom: 18px;
+    }
+
+    .page-title {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .top-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .card-header {
+      background: var(--primary);
+      color: white;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    /* QUICK LINKS: 8 apps in one row on desktop */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 20px 16px;
+    }
+
+    .quick-link {
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 110px;
+      word-break: break-word;
+      transition: 0.2s ease;
+    }
+
+    .quick-link:hover,
+    .suite-item:hover,
+    .need-card:hover {
+      background: var(--hover);
+    }
+
+    .app-icon,
+    .suite-icon-wrap {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: #eef4fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .quick-link span,
+    .suite-item span {
+      font-weight: 600;
+      line-height: 1.35;
+      font-size: 14px;
+    }
+
+    /* GOOGLE SUITE: 4 apps in one row on desktop */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px 16px;
+    }
+
+    .suite-item {
+      text-decoration: none;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 110px;
+      text-align: center;
+      word-break: break-word;
+      transition: 0.2s ease;
+    }
+
+    .announcement-card .card-body {
+      padding: 22px;
+    }
+
+    .email-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fbfdff;
+    }
+
+    .email-subject {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fbff;
+    }
+
+    .email-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .email-subject-text {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .email-body {
+      padding: 18px;
+      line-height: 1.7;
+      white-space: pre-line;
+      color: #374151;
+      min-height: 240px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 28px 0 16px;
+      color: var(--sidebar);
+    }
+
+    /* I NEED SECTION */
+    .need-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .need-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fbfdff;
+      transition: all 0.2s ease;
+      min-height: 100%;
+    }
+
+    .need-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .need-title {
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    .need-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .need-card li {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #edf2f8;
+    }
+
+    .need-card li:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .need-card a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
+      display: block;
+    }
+
+    .need-card a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .list li {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fbfdff;
+    }
+
+    .list strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .list span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Tablet */
+    @media (max-width: 1280px) {
+      .quick-links {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .need-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .top-row {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-links {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .need-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .lower-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* Small tablet */
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        min-height: auto;
+        padding: 14px;
+      }
+
+      .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav a {
+        flex: 1 1 110px;
+        min-height: 72px;
+      }
+
+      .quick-links {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .need-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .main {
+        padding: 14px;
+      }
+
+      .page-title {
+        font-size: 26px;
+      }
+
+      .section-title {
+        font-size: 22px;
+      }
+
+      .card-body {
+        padding: 14px;
+      }
+
+      .announcement-card .card-body {
+        padding: 14px;
+      }
+
+      .quick-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 12px;
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 12px;
+      }
+
+      .need-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-link,
+      .suite-item {
+        min-height: 100px;
+        padding: 10px 6px;
+      }
+
+      .app-icon,
+      .suite-icon-wrap {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+      }
+    }
+    .suite-icon-wrap img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">DM</div>
+        <div class="logo-sub">Clinical Research</div>
+      </div>
+
+      <nav class="nav">
+        <a href="#" class="active"><div class="icon">🏠</div><div>Home</div></a>
+        <a href="https://www.appsheet.com/start/dc5a98dd-d681-41c8-a309-c8ef3a95693b"><div class="icon">👥</div><div>Directory</div></a>
+        <a href="#"><div class="icon">📄</div><div>Forms</div></a>
+        
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1 class="page-title">Home</h1>
+      </div>
+
+      <section class="top-row">
+        <div class="card">
+          <div class="card-header">Quick Links</div>
+          <div class="card-body">
+            <div class="quick-links">
+              <a class="quick-link" href="#"><div class="app-icon">🦠</div><span>COVID</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">💼</div><span>ADP Login</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">💳</div><span>Paycom</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">🧾</div><span>CRIO</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">🏥</div><span>Florence</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">📈</div><span>ComTrak</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">🧪</div><span>ATOM</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">📊</div><span>Exec Reports</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">❤️</div><span>Health Matrix</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">🧭</div><span>Site Companion</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">📂</div><span>Shared Drive</span></a>
+              <a class="quick-link" href="#"><div class="app-icon">📝</div><span>Quick Request</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Google Suite</div>
+          <div class="card-body">
+           <div class="app-grid">
+
+  <a class="suite-item" href="https://mail.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/gmail_48dp.png" />
+    </div>
+    <span>Gmail</span>
+  </a>
+
+  <a class="suite-item" href="https://chat.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/chat_48dp.png" />
+    </div>
+    <span>Chat</span>
+  </a>
+
+  <a class="suite-item" href="https://drive.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/drive_48dp.png" />
+    </div>
+    <span>Drive</span>
+  </a>
+
+  <a class="suite-item" href="https://meet.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/meet_48dp.png" />
+    </div>
+    <span>Meet</span>
+  </a>
+
+  <a class="suite-item" href="https://docs.google.com/document" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/docs_48dp.png" />
+    </div>
+    <span>Docs</span>
+  </a>
+
+  <a class="suite-item" href="https://docs.google.com/spreadsheets" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/sheets_48dp.png" />
+    </div>
+    <span>Sheets</span>
+  </a>
+
+  <a class="suite-item" href="https://docs.google.com/presentation" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/slides_48dp.png" />
+    </div>
+    <span>Slides</span>
+  </a>
+
+  <a class="suite-item" href="https://forms.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/forms_48dp.png" />
+    </div>
+    <span>Forms</span>
+  </a>
+
+  <a class="suite-item" href="https://calendar.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/calendar_48dp.png" />
+    </div>
+    <span>Calendar</span>
+  </a>
+
+  <a class="suite-item" href="https://keep.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />
+    </div>
+    <span>Keep</span>
+  </a>
+
+  <a class="suite-item" href="https://sites.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/sites_48dp.png" />
+    </div>
+    <span>Sites</span>
+  </a>
+
+  <a class="suite-item" href="https://groups.google.com" target="_blank">
+    <div class="suite-icon-wrap">
+      <img src="https://www.gstatic.com/images/branding/product/1x/groups_48dp.png" />
+    </div>
+    <span>Groups</span>
+  </a>
+
+</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card announcement-card">
+        <div class="card-header">DM Clinical Announcement</div>
+        <div class="card-body">
+          <div class="email-box">
+            <div class="email-subject">
+              
+              <div class="email-subject-text">Follow-Up Update – Website Access & Email Delivery</div>
+            </div>
+            <div class="email-body"> This is a brief follow-up regarding DM website access and email delivery.
+
+We are actively monitoring the situation, and everything is functioning smoothly. At this time, we are not seeing any new emails being routed to spam.
+
+Please note that some older email threads that were previously flagged may still go to Spam/Junk. Please review your spam folders carefully, and ensure you go in and mark the email "Not Spam" to help deliver future messages to your inbox.
+
+Please notify IT at helpdesk@dmclinical.com if you notice any irregularities.
+
+Thank you.
+
+IT &amp; Cyber Security Department
+DM Clinical Research</div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Quick Request</h2>
+
+      <section class="card">
+        <div class="card-header">I Need</div>
+        <div class="card-body">
+          <div class="need-grid">
+            <div class="need-card">
+              <div class="need-title">System Operations &amp; IT</div>
+              <ul>
+                <li><a href="#">Submit a System Access Request</a></li>
+                <li><a href="#">eSource Signoff Document</a></li>
+                <li><a href="#">Data Request Form</a></li>
+                <li><a href="#">Internal eSource Data Fix Form</a></li>
+                <li><a href="#">Finance Query Ticketing</a></li>
+                <li><a href="#">Discretionary Payment Form</a></li>
+                <li><a href="#">JotForm Request Form</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Marketing Department</div>
+              <ul>
+                <li><a href="#">Project Request Form</a></li>
+                <li><a href="#">Campaign Request Form</a></li>
+                <li><a href="#">Patient Engagement Request</a></li>
+                <li><a href="#">Community Outreach Request</a></li>
+                <li><a href="#">Outstanding Patient Submission</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Regulatory Department</div>
+              <ul>
+                <li><a href="#">Regulatory Department Directory</a></li>
+                <li><a href="#">IRB Access Request Form</a></li>
+                <li><a href="#">Initial DoA Verification Sign Off</a></li>
+                <li><a href="#">DoA Change Request Form</a></li>
+                <li><a href="#">e-Training Log Request Form</a></li>
+                <li><a href="#">IRB Handbooks</a></li>
+                <li><a href="#">Principal Investigator Change Initiation Form</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Site Operations</div>
+              <ul>
+                <li><a href="#">Site Operations Requests</a></li>
+                <li><a href="#">Patient Enrollment Support</a></li>
+                <li><a href="#">Outstanding Patient Submission</a></li>
+              </ul>
+            </div>
+
+          
+
+            <div class="need-card">
+              <div class="need-title">Learning &amp; Development</div>
+              <ul>
+                <li><a href="#">Training Requests</a></li>
+                <li><a href="#">Learning Resources</a></li>
+                <li><a href="#">Department Onboarding</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Patient Enrollment</div>
+              <ul>
+                <li><a href="#">Enrollment Request Form</a></li>
+                <li><a href="#">Patient Outreach Support</a></li>
+                <li><a href="#">Enrollment Follow-up</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Conference Request</div>
+              <ul>
+                <li><a href="#">Conference Approval Form</a></li>
+                <li><a href="#">Travel &amp; Attendance Request</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">QACE Department</div>
+              <ul>
+                <li><a href="#">QACE Forms</a></li>
+                <li><a href="#">Compliance Request</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Safety Team</div>
+              <ul>
+                <li><a href="#">Safety Event Request</a></li>
+                <li><a href="#">Safety Team Forms</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Clinical Data</div>
+              <ul>
+                <li><a href="#">Clinical Data Request</a></li>
+                <li><a href="#">Reports &amp; Tracking</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Wellness</div>
+              <ul>
+                <li><a href="#">Wellness Program Request</a></li>
+                <li><a href="#">Employee Support Resources</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">Business Development</div>
+              <ul>
+                <li><a href="#">Business Development Forms</a></li>
+                <li><a href="#">Proposal Support Request</a></li>
+              </ul>
+            </div>
+
+            <div class="need-card">
+              <div class="need-title">HR Forms</div>
+              <ul>
+                <li><a href="#">DM Employee Handbooks</a></li>
+                <li><a href="#">DM Travel &amp; Expense Report</a></li>
+                <li><a href="#">Requisition Forms &amp; Events</a></li>
+                <li><a href="#">Other HR Forms</a></li>
+                <li><a href="#">Benefits</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <div class="card">
+          <div class="card-header">My Team</div>
+          <div class="card-body">
+            <ul class="list">
+              <li><strong>Operations Team</strong><span>Static placeholder content</span></li>
+              <li><strong>Clinical Team</strong><span>Static placeholder content</span></li>
+              <li><strong>Support Team</strong><span>Static placeholder content</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">My Important Forms</div>
+          <div class="card-body">
+            <ul class="list">
+              <li><strong>Leave Request Form</strong><span>Internal HR document</span></li>
+              <li><strong>Expense Reimbursement</strong><span>Finance workflow</span></li>
+              <li><strong>IT Support Request</strong><span>Static link placeholder</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Recent Files</div>
+          <div class="card-body">
+            <ul class="list">
+              <li><strong>Onboarding Guide.pdf</strong><span>Updated 2 days ago</span></li>
+              <li><strong>Clinical SOP.docx</strong><span>Updated 4 days ago</span></li>
+              <li><strong>Monthly KPI.xlsx</strong><span>Updated 1 week ago</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
