@@ -1066,18 +1066,17 @@ img { max-width: 100%; }
             <span class="card-title"><i class="ti ti-speakerphone"></i> Announcements</span>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
               <span class="badge-unack" id="unackBadge" style="display:none;"></span>
-              <span class="badge-info" id="announcementsBadge">0 / 0</span>
             </div>
           </div>
           <div class="card-body">
             <div class="announcement-scroll" id="announcementsList"></div>
             <div class="carousel-controls" id="carouselControls" style="display:none;">
               <button class="carousel-btn" id="prevAnnouncement" aria-label="Previous announcement">
-                <i class="ti ti-chevron-left"></i>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
               <span class="carousel-indicator" id="carouselIndicator">1 / 1</span>
               <button class="carousel-btn" id="nextAnnouncement" aria-label="Next announcement">
-                <i class="ti ti-chevron-right"></i>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
             </div>
           </div>
@@ -1521,7 +1520,6 @@ function renderAnnouncements(items) {
 
 function updateAnnouncementView(slideClass) {
   const wrap     = document.getElementById('announcementsList');
-  const badge    = document.getElementById('announcementsBadge');
   const unack    = document.getElementById('unackBadge');
   const controls = document.getElementById('carouselControls');
   const indicator= document.getElementById('carouselIndicator');
@@ -1529,7 +1527,6 @@ function updateAnnouncementView(slideClass) {
 
   if (!allAnnouncements.length) {
     wrap.innerHTML = '<div class="empty-inline">No announcements yet.</div>';
-    badge.textContent = '0 / 0';
     if (unack) unack.style.display = 'none';
     if (controls) controls.style.display = 'none';
     return;
@@ -1541,9 +1538,6 @@ function updateAnnouncementView(slideClass) {
   // Count unacknowledged
   const ackState    = getAckState();
   const unackCount  = allAnnouncements.filter(a => !ackState[getAnnouncementKey(a)]).length;
-  const ackedCount  = allAnnouncements.length - unackCount;
-
-  badge.textContent = ackedCount + ' / ' + allAnnouncements.length + ' read';
 
   if (unack) {
     if (unackCount > 0) {
